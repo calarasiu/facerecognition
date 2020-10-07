@@ -1,6 +1,6 @@
 .logo{
-  -webkit-box-shadow: 5px 5px 15px 5px #f1e9f1; 
-box-shadow: 5px 5px 15px 5px #f1e9f1;
+  /* -webkit-box-shadow: 5px 5px 15px 5px #f1e9f1;  */
+/* box-shadow: 5px 5px 15px 5px #f1e9f1; */
 background: rgb(2,0,36);
 background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(227,30,196,1) 0%, rgba(0,212,255,1) 100%);
 }
