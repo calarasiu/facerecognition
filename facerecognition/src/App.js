@@ -8,6 +8,7 @@ import Rank from "./components/Rank/Rank";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin"
+import Register from "./components/Register/Register"
 
 const app = new Clarifai.App({
   apiKey: '31718e36cfea4dcebd422878bf94f7be'
@@ -32,7 +33,8 @@ class App extends Component {
       input: '',
       imageUrl: '',
       box :{},
-      route: 'signin'
+      route: 'signin',
+      isSignedIn: false
     }
   }
 
@@ -41,7 +43,6 @@ class App extends Component {
    const image = document.getElementById("inputImage");
    const width = Number(image.width);
    const height = Number(image.height);
-   console.log(width, height);
    return {
     leftCol: clarifaiFace.left_col*width,
     topRow: clarifaiFace.top_row*height,
@@ -51,7 +52,6 @@ class App extends Component {
   }
 
   displayFaceBox=(box)=>{
-    console.log(box);
     this.setState({box: box});
   }
 
@@ -67,25 +67,40 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
 
-  onRouteChange = ()=>{
-    this.setState({route:'home'});
+  onRouteChange = (route)=>{
+    if(route === 'signout'){
+      this.setState({isSignedIn: false})
+    }else if(route === 'home'){
+      this.setState({isSignedIn: true})
+    }
+    this.setState({route:route});
   }
 
   render (){
+    const {route, isSignedIn, box, imageUrl} = this.state;
     return (
       <div className="App">
         <Particles className = 'particles'
                 params={particlesOptions}
               />
-        {this.state.route === 'signin'?
-          <Signin onRouteChange = {this.onRouteChange}/>
-          : <div>
-              <Navigation/>
-              <Logo/>
-              <Rank/>
-              <ImageLinkForm onInputChange = {this.onInputChange} onButtonSubmit = {this.onButtonSubmit}/>
-              <FaceRecognition box = {this.state.box} imageUrl = {this.state.imageUrl}/>
+        {route === 'home'
+          ?<div>
+            <Navigation isSignedIn = {isSignedIn} onRouteChange = {this.onRouteChange}/>
+            <Logo/>
+            <Rank/>
+            <ImageLinkForm onInputChange = {this.onInputChange} onButtonSubmit = {this.onButtonSubmit}/>
+            <FaceRecognition box = {box} imageUrl = {imageUrl}/>
           </div>
+          : (route === 'signin'
+              ?<div>
+                <Navigation isSignedIn = {isSignedIn} onRouteChange = {this.onRouteChange}/>
+                <Signin onRouteChange = {this.onRouteChange}/>
+              </div>
+              :<div>
+                <Navigation isSignedIn = {isSignedIn} onRouteChange = {this.onRouteChange}/>
+                <Register onRouteChange = {this.onRouteChange}/>
+              </div>
+            )
         }      
       </div>
     );
