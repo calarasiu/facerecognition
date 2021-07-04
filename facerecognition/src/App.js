@@ -10,8 +10,9 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin"
 import Register from "./components/Register/Register"
 
+// added the key on the client side code bc the app doesn't have the server side
 const app = new Clarifai.App({
-  apiKey: '31718e36cfea4dcebd422878bf94f7be'
+  apiKey: process.env.REACT_APP_CLARIFAI
 })
 
 const particlesOptions = {
@@ -55,10 +56,11 @@ class App extends Component {
     this.setState({box: box});
   }
 
-  onButtonSubmit =()=>{
+  onButtonSubmit =(event)=>{
+    event.preventDefault();
     this.setState({imageUrl: this.state.input});
     app.models
-    .predict('c0c0ac362b03416da06ab3fa36fb58e3', this.state.input)
+    .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
       .catch(err => console.log(err));
   }
